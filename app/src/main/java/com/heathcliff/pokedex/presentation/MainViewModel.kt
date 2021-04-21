@@ -27,7 +27,6 @@ class MainViewModel : ViewModel() {
     fun getPokemonList(): LiveData<List<DisplayableItem>> = _pokemonListLiveData
 
     fun loadData() {
-
         disposable = repository.getPokemonList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -39,12 +38,10 @@ class MainViewModel : ViewModel() {
                             Log.d("MainViewModel", "Error:", it)
                         }
                 )
-
     }
 
     fun showData(pokemons: List<PokemonEntity>) {
         val resultList = mutableListOf<DisplayableItem>()
-
         val maxGeneration = pokemons.maxBy { it.generation }!!.generation
 
         for (generation in 0..maxGeneration) {

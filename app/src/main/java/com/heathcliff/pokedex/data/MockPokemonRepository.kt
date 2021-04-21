@@ -23,7 +23,7 @@ class MockPokemonRepository : PokemonRepository {
     override fun getPokemonById(id: String): Single<PokemonEntity> {
         val pokemon = items.find { it.id == id }
 
-        return if(pokemon!=null){
+        return if (pokemon != null) {
             Single.just(pokemon)
         } else {
             Single.error(Throwable("Not found"))

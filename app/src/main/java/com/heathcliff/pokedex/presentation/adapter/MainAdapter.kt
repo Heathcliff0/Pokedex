@@ -9,18 +9,16 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.heathcliff.pokedex.R
-
-private val ITEM_VIEW_TYPE_POKEMON = 0
-private val ITEM_VIEW_TYPE_BANNER = 1
+import com.heathcliff.pokedex.utils.ItemViewTypes
 
 class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val displayableItems = listOf<DisplayableItem>().toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType){
-            ITEM_VIEW_TYPE_POKEMON -> PokemonViewHolder.from(parent)
-            ITEM_VIEW_TYPE_BANNER -> BannerViewHolder.from(parent)
+        return when (viewType) {
+            ItemViewTypes.ITEM_VIEW_TYPE_POKEMON -> PokemonViewHolder.from(parent)
+            ItemViewTypes.ITEM_VIEW_TYPE_BANNER -> BannerViewHolder.from(parent)
             else -> throw IllegalStateException("Unknown item view type")
         }
     }
@@ -37,8 +35,8 @@ class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         return when (displayableItems[position]) {
-            is PokemonItem -> ITEM_VIEW_TYPE_POKEMON
-            is BannerItem -> ITEM_VIEW_TYPE_BANNER
+            is PokemonItem -> ItemViewTypes.ITEM_VIEW_TYPE_POKEMON
+            is BannerItem -> ItemViewTypes.ITEM_VIEW_TYPE_BANNER
             else -> throw IllegalStateException("Unknown item view type")
         }
     }

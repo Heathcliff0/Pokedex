@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-fun createPokemonApiService(): PokemonApiService{
+fun createPokemonApiService(): PokemonApiService {
     val retrofit = Retrofit.Builder()
             .baseUrl("https://pokeapi.co/api/v2/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -21,9 +21,9 @@ fun createPokemonApiService(): PokemonApiService{
 interface PokemonApiService {
     @GET("pokemon")
     fun fetchPokemonList(
-        @Query("limit") limit: Int = 20,
-        @Query("offset") offset: Int = 0
-    ):Single<PokemonListResponse>
+            @Query("limit") limit: Int = 20,
+            @Query("offset") offset: Int = 0
+    ): Single<PokemonListResponse>
 
     @GET("pokemon/{name}")
     fun fetchPokemonInfo(@Path("name") name: String): Single<PokemonDetailedResponse>
