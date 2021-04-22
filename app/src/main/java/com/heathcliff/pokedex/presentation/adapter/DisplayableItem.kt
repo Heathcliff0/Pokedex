@@ -1,5 +1,7 @@
 package com.heathcliff.pokedex.presentation.adapter
 
+import com.heathcliff.pokedex.domain.PokemonEntity
+
 interface DisplayableItem
 
 data class PokemonItem(
@@ -11,3 +13,5 @@ data class PokemonItem(
 data class BannerItem(
         val text: String
 ) : DisplayableItem
+
+fun PokemonEntity.toItem(): PokemonItem = PokemonItem(id, name, imageUrl)
