@@ -1,4 +1,4 @@
-package com.heathcliff.pokedex.presentation
+package com.heathcliff.pokedex.presentation.list
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,20 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.heathcliff.pokedex.data.NetworkPokemonRepository
 import com.heathcliff.pokedex.data.network.createPokemonApiService
-import com.heathcliff.pokedex.domain.PokemonEntity
+import com.heathcliff.pokedex.di.Injector
 import com.heathcliff.pokedex.domain.PokemonRepository
-import com.heathcliff.pokedex.presentation.adapter.BannerItem
-import com.heathcliff.pokedex.presentation.adapter.DisplayableItem
-import com.heathcliff.pokedex.presentation.adapter.toItem
+import com.heathcliff.pokedex.presentation.list.adapter.toItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class MainViewModel : ViewModel() {
     //private val repository: PokemonRepository = MockPokemonRepository()
-    private val repository: PokemonRepository = NetworkPokemonRepository(
-            api = createPokemonApiService()
-    )
+    private val repository = Injector.providePokemonRepository()
 
     private var disposable: Disposable? = null
 
@@ -39,7 +35,7 @@ class MainViewModel : ViewModel() {
                         },
                         {
                             Log.d("ViewModel", "Error is", it)
-                            _viewStateLiveData.value = MainViewState.ErrorState("Oops, something went wrong")
+                            _viewStateLiveData.value = MainViewState.ErrorState("Oops, something went wrong. Try restarting the app.")
                         }
                 )
     }

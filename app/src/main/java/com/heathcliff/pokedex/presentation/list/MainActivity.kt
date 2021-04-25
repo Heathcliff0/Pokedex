@@ -1,4 +1,4 @@
-package com.heathcliff.pokedex.presentation
+package com.heathcliff.pokedex.presentation.list
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,13 +8,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.ActivityMainBinding
-import com.heathcliff.pokedex.presentation.adapter.DisplayableItem
-import com.heathcliff.pokedex.presentation.adapter.MainAdapter
+import com.heathcliff.pokedex.presentation.list.adapter.DisplayableItem
+import com.heathcliff.pokedex.presentation.list.adapter.MainAdapter
 import com.heathcliff.pokedex.utils.ItemViewTypes
 
 class MainActivity : AppCompatActivity() {
     private val viewModel = MainViewModel()
-    private val adapter = MainAdapter()
+    private lateinit var adapter: MainAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +47,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        adapter = MainAdapter(
+            onItemClicked = {id ->
+                Toast.makeText(this, "Pokemon selected with id=$id", Toast.LENGTH_SHORT).show()
+            }
+        )
 
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter

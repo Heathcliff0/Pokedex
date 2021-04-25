@@ -1,4 +1,4 @@
-package com.heathcliff.pokedex.presentation.adapter
+package com.heathcliff.pokedex.presentation.list.adapter
 
 import com.heathcliff.pokedex.domain.PokemonEntity
 

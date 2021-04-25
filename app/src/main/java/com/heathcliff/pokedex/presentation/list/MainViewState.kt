@@ -1,6 +1,6 @@
-package com.heathcliff.pokedex.presentation
+package com.heathcliff.pokedex.presentation.list
 
-import com.heathcliff.pokedex.presentation.adapter.PokemonItem
+import com.heathcliff.pokedex.presentation.list.adapter.PokemonItem
 
 sealed class MainViewState {
     object LoadingState : MainViewState()

@@ -1,4 +1,4 @@
-package com.heathcliff.pokedex.presentation.adapter
+package com.heathcliff.pokedex.presentation.list.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +11,15 @@ import com.bumptech.glide.Glide
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.utils.ItemViewTypes
 
-class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainAdapter(
+        private val onItemClicked: (id: String) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val displayableItems = listOf<DisplayableItem>().toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ItemViewTypes.ITEM_VIEW_TYPE_POKEMON -> PokemonViewHolder.from(parent)
+            ItemViewTypes.ITEM_VIEW_TYPE_POKEMON -> PokemonViewHolder.from(parent, onItemClicked)
             ItemViewTypes.ITEM_VIEW_TYPE_BANNER -> BannerViewHolder.from(parent)
             else -> throw IllegalStateException("Unknown item view type")
         }
@@ -50,7 +52,7 @@ class MainAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 // =============== PokemonViewHolder ===============
 
-class PokemonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class PokemonViewHolder(view: View, val onItemClicked: (id: String) -> Unit) : RecyclerView.ViewHolder(view) {
 
     private val nameTextView: TextView = view.findViewById(R.id.pokemonItemNameText)
     private val pokemonImageView: ImageView = view.findViewById(R.id.pokemonItemImageView)
@@ -61,11 +63,15 @@ class PokemonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         Glide.with(pokemonImageView.context)
                 .load(item.imageUrl.toUri().buildUpon().scheme("https").build())
                 .into(pokemonImageView)
+
+        itemView.setOnClickListener{
+            onItemClicked(item.id)
+        }
     }
 
     companion object {
-        fun from(parent: ViewGroup): RecyclerView.ViewHolder {
-            return PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item, parent, false))
+        fun from(parent: ViewGroup, onItemClicked: (id: String) -> Unit): RecyclerView.ViewHolder {
+            return PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item, parent, false), onItemClicked)
         }
     }
 }
