@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#333333"
-        tools:context=".presentation.list.MainActivity">
+        tools:context=".presentation.list.PokemonListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

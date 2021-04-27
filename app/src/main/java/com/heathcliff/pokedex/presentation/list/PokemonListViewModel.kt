@@ -4,26 +4,23 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.heathcliff.pokedex.data.NetworkPokemonRepository
-import com.heathcliff.pokedex.data.network.createPokemonApiService
 import com.heathcliff.pokedex.di.Injector
-import com.heathcliff.pokedex.domain.PokemonRepository
 import com.heathcliff.pokedex.presentation.list.adapter.toItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class MainViewModel : ViewModel() {
+class PokemonListViewModel : ViewModel() {
     //private val repository: PokemonRepository = MockPokemonRepository()
     private val repository = Injector.providePokemonRepository()
 
     private var disposable: Disposable? = null
 
-    private val _viewStateLiveData = MutableLiveData<MainViewState>()
-    fun viewState(): LiveData<MainViewState> = _viewStateLiveData
+    private val _viewStateLiveData = MutableLiveData<PokemonListViewState>()
+    fun viewState(): LiveData<PokemonListViewState> = _viewStateLiveData
 
     fun loadData() {
-        _viewStateLiveData.value = MainViewState.LoadingState
+        _viewStateLiveData.value = PokemonListViewState.LoadingState
 
         disposable = repository.getPokemonList()
                 .map { items -> items.map { it.toItem() } }
@@ -31,11 +28,11 @@ class MainViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            _viewStateLiveData.value = MainViewState.ContentState(it)
+                            _viewStateLiveData.value = PokemonListViewState.ContentState(it)
                         },
                         {
                             Log.d("ViewModel", "Error is", it)
-                            _viewStateLiveData.value = MainViewState.ErrorState("Oops, something went wrong. Try restarting the app.")
+                            _viewStateLiveData.value = PokemonListViewState.ErrorState("Oops, something went wrong. Try restarting the app.")
                         }
                 )
     }
