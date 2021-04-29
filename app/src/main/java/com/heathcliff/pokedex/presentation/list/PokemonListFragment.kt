@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonListBinding
@@ -16,7 +17,7 @@ import com.heathcliff.pokedex.presentation.list.adapter.DisplayableItem
 import com.heathcliff.pokedex.presentation.list.adapter.MainAdapter
 import com.heathcliff.pokedex.utils.ItemViewTypes
 
-class PokemonListFragment : Fragment() {
+class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private val viewModel = PokemonListViewModel()
     private lateinit var adapter: MainAdapter
 
@@ -27,12 +28,11 @@ class PokemonListFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        val binding: FragmentPokemonListBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
+        val binding: FragmentPokemonListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
 
         initRecyclerView(binding)
 
-        viewModel.viewState().observe(this, Observer { state ->
+        viewModel.viewState().observe(viewLifecycleOwner, Observer { state ->
             when (state) {
                 is PokemonListViewState.LoadingState -> showProgress()
                 is PokemonListViewState.ErrorState -> showError(state.errorMessage)
@@ -61,15 +61,8 @@ class PokemonListFragment : Fragment() {
 
         adapter = MainAdapter(
             onItemClicked = {
-                val safeContext = context
-                if (safeContext != null) {
-                    activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(android.R.id.content, PokemonDetailsFragment())
-                        ?.addToBackStack(null)
-                        ?.commit()
-                }
-            }
-        )
+                view?.findNavController()?.navigate(PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(it))
+            })
 
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter

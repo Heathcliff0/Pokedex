@@ -21,7 +21,6 @@ class PokemonDetailsViewModel: ViewModel() {
         _viewStateLiveData.value = PokemonDetailsViewState.Loading
 
         disposable = repository.getPokemonById(id)
-            .delay(1,TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ pokemon ->

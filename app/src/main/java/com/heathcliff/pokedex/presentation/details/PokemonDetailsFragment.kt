@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonDetailsBinding
 
-class PokemonDetailsFragment: Fragment() {
+class PokemonDetailsFragment: Fragment(R.layout.fragment_pokemon_details) {
     private lateinit var binding: FragmentPokemonDetailsBinding
     private val viewModel = PokemonDetailsViewModel()
 
@@ -24,9 +24,10 @@ class PokemonDetailsFragment: Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
+        val args = PokemonDetailsFragmentArgs.fromBundle(requireArguments())
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_details, container, false)
 
-        loadPokemonData("1")
+        loadPokemonData(args.pokemonId)
 
         return binding.root
     }
@@ -59,7 +60,7 @@ class PokemonDetailsFragment: Fragment() {
 
     fun showData(state: PokemonDetailsViewState.Data){
         binding.pokemonDetailsName.text = state.name
-        binding.pokemonDetailsAbilities.text = state.abilities.joinToString(separator = ","){it}
+        binding.pokemonDetailsAbilities.text = state.abilities.joinToString(separator = "\n"){it}
 
         Glide.with(binding.pokemonDetailsImageView.context)
             .load(state.imageUrl.toUri().buildUpon().scheme("https").build())
