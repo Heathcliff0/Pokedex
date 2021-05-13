@@ -4,6 +4,6 @@ data class PokemonEntity(
         val id: String,
         val name: String,
         val imageUrl: String,
-        val generation: Int = 0,
-        val abilities: List<String> = emptyList()
+        val abilities: List<String> = emptyList(),
+        val stats: Map<String, String> = emptyMap()
 )

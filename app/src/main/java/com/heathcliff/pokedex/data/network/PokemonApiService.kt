@@ -42,16 +42,25 @@ data class PokemonPartialResponse(
 data class PokemonDetailedResponse(
         val id: String,
         val name: String,
-        val abilities: List<PokemonAbilityData>
+        val abilities: List<PokemonAbilityData>,
+        val stats: List<PokemonStatsData>
+)
+
+// Abilities
+data class PokemonAbilityData(
+        val ability: PokemonAbilityDetailsData,
 )
 
 data class PokemonAbilityDetailsData(
-        val name: String,
-        val url: String
+        val name: String
 )
 
-data class PokemonAbilityData(
-        val ability: PokemonAbilityDetailsData,
-        val is_hidden: Boolean,
-        val slot: Int
+// Stats
+data class PokemonStatsData(
+        val stat: PokemonStatsDetailData,
+        val base_stat: String
+)
+
+data class PokemonStatsDetailData(
+        val name: String
 )

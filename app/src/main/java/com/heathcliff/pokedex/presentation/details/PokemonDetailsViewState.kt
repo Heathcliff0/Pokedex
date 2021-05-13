@@ -6,7 +6,8 @@ sealed class PokemonDetailsViewState {
     data class Data(
         val name: String,
         val imageUrl: String,
-        val abilities: List<String>
+        val abilities: List<String>,
+        val stats: Map<String, String>
     ): PokemonDetailsViewState()
 
     data class Error(val message: String): PokemonDetailsViewState()

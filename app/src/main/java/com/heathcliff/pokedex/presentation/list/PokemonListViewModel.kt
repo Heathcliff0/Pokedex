@@ -20,7 +20,7 @@ class PokemonListViewModel : ViewModel() {
     fun viewState(): LiveData<PokemonListViewState> = _viewStateLiveData
 
     fun loadData() {
-        _viewStateLiveData.value = PokemonListViewState.LoadingState
+        _viewStateLiveData.value = PokemonListViewState.Loading
 
         disposable = repository.getPokemonList()
                 .map { items -> items.map { it.toItem() } }
@@ -28,11 +28,11 @@ class PokemonListViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            _viewStateLiveData.value = PokemonListViewState.ContentState(it)
+                            _viewStateLiveData.value = PokemonListViewState.Data(it)
                         },
                         {
                             Log.d("ViewModel", "Error is", it)
-                            _viewStateLiveData.value = PokemonListViewState.ErrorState("Oops, something went wrong. Try restarting the app.")
+                            _viewStateLiveData.value = PokemonListViewState.Error
                         }
                 )
     }

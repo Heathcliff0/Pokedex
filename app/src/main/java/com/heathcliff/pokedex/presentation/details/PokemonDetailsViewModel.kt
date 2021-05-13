@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-class PokemonDetailsViewModel: ViewModel() {
+class PokemonDetailsViewModel : ViewModel() {
     private val repository = Injector.providePokemonRepository()
 
     private var disposable: Disposable? = null
@@ -21,17 +21,18 @@ class PokemonDetailsViewModel: ViewModel() {
         _viewStateLiveData.value = PokemonDetailsViewState.Loading
 
         disposable = repository.getPokemonById(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ pokemon ->
-                _viewStateLiveData.value = PokemonDetailsViewState.Data(
-                    name = pokemon.name,
-                    imageUrl = pokemon.imageUrl,
-                    abilities = pokemon.abilities
-                )
-            }, {
-                _viewStateLiveData.value = PokemonDetailsViewState.Error("Failed to load pokemon with id=$id")
-            })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ pokemon ->
+                    _viewStateLiveData.value = PokemonDetailsViewState.Data(
+                            name = pokemon.name,
+                            imageUrl = pokemon.imageUrl,
+                            abilities = pokemon.abilities,
+                            stats = pokemon.stats
+                    )
+                }, {
+                    _viewStateLiveData.value = PokemonDetailsViewState.Error("Failed to load pokemon with id=$id")
+                })
     }
 
     override fun onCleared() {

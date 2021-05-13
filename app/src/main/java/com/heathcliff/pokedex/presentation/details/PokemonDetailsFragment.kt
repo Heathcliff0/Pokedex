@@ -35,8 +35,8 @@ class PokemonDetailsFragment: Fragment(R.layout.fragment_pokemon_details) {
     private fun loadPokemonData(id: String){
         viewModel.loadPokemonById(id)
 
-        viewModel.viewState().observe(viewLifecycleOwner, Observer{
-            when(it){
+        viewModel.viewState().observe(viewLifecycleOwner, Observer{ state ->
+            when(state){
                 is PokemonDetailsViewState.Loading -> {
                     binding.pokemonDetailsGroup.isVisible = false
                     binding.pokemonDetailsProgressBar.isVisible = true
@@ -47,7 +47,7 @@ class PokemonDetailsFragment: Fragment(R.layout.fragment_pokemon_details) {
                     binding.pokemonDetailsProgressBar.isVisible = false
                     binding.pokemonDetailsErrorImage.isVisible = false
 
-                    showData(it)
+                    showData(state)
                 }
                 is PokemonDetailsViewState.Error -> {
                     binding.pokemonDetailsGroup.isVisible = false
@@ -61,6 +61,9 @@ class PokemonDetailsFragment: Fragment(R.layout.fragment_pokemon_details) {
     fun showData(state: PokemonDetailsViewState.Data){
         binding.pokemonDetailsName.text = state.name
         binding.pokemonDetailsAbilities.text = state.abilities.joinToString(separator = "\n"){it}
+        binding.pokemonDetailsStats.text = state.stats.entries
+                .map { "${it.key.toUpperCase()}: ${it.value}" }
+                .joinToString(separator = "\n"){it}
 
         Glide.with(binding.pokemonDetailsImageView.context)
             .load(state.imageUrl.toUri().buildUpon().scheme("https").build())

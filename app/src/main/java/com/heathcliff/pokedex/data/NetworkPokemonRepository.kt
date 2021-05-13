@@ -25,15 +25,21 @@ class NetworkPokemonRepository(
         return api.fetchPokemonInfo(id).map { pokemonDetailedResponse ->
             val abilities = pokemonDetailedResponse.abilities.map { it.ability.name }
 
+            val stats = mutableMapOf<String, String>()
+            pokemonDetailedResponse.stats.map {
+                stats.put(it.stat.name, it.base_stat)
+            }
+
             PokemonEntity(
                     id = pokemonDetailedResponse.id,
                     name = pokemonDetailedResponse.name,
                     imageUrl = generateUrlFromId(pokemonDetailedResponse.id),
-                    abilities = abilities
+                    abilities = abilities,
+                    stats = stats
             )
         }
     }
 
-    private fun generateUrlFromId(id: String): String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png"
+    private fun generateUrlFromId(id: String): String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 
 }

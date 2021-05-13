@@ -1,4 +1,5 @@
 package com.heathcliff.pokedex.data
+/*
 
 import com.heathcliff.pokedex.domain.PokemonEntity
 import com.heathcliff.pokedex.domain.PokemonRepository
@@ -31,4 +32,4 @@ class MockPokemonRepository : PokemonRepository {
     }
 
     private fun generateUrlFromId(id: Int): String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png"
-}
+}*/

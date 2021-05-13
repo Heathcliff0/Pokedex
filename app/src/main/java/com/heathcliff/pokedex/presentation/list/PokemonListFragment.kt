@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonListBinding
 import com.heathcliff.pokedex.presentation.details.PokemonDetailsFragment
+import com.heathcliff.pokedex.presentation.details.PokemonDetailsViewState
 import com.heathcliff.pokedex.presentation.list.adapter.DisplayableItem
 import com.heathcliff.pokedex.presentation.list.adapter.MainAdapter
 import com.heathcliff.pokedex.utils.ItemViewTypes
@@ -33,10 +35,24 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         initRecyclerView(binding)
 
         viewModel.viewState().observe(viewLifecycleOwner, Observer { state ->
-            when (state) {
-                is PokemonListViewState.LoadingState -> showProgress()
-                is PokemonListViewState.ErrorState -> showError(state.errorMessage)
-                is PokemonListViewState.ContentState -> showData(state.items)
+            when(state){
+                is PokemonListViewState.Loading -> {
+                    binding.recyclerView.isVisible = false
+                    binding.pokemonListProgressBar.isVisible = true
+                    binding.pokemonListErrorImage.isVisible = false
+                }
+                is PokemonListViewState.Data -> {
+                    binding.recyclerView.isVisible = true
+                    binding.pokemonListProgressBar.isVisible = false
+                    binding.pokemonListErrorImage.isVisible = false
+
+                    showData(state.items)
+                }
+                is PokemonListViewState.Error -> {
+                    binding.recyclerView.isVisible = false
+                    binding.pokemonListProgressBar.isVisible = false
+                    binding.pokemonListErrorImage.isVisible = true
+                }
             }
         })
 
@@ -68,16 +84,9 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         binding.recyclerView.adapter = adapter
     }
 
-    private fun showProgress() {
-        Toast.makeText(activity, "Loading", Toast.LENGTH_LONG).show()
-    }
-
     private fun showData(items: List<DisplayableItem>) {
         adapter.setDisplayableItemsList(items)
     }
 
-    private fun showError(errorMessage: String) {
-        Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
-    }
 }
 
