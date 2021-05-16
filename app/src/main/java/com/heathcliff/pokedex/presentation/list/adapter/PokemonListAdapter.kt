@@ -1,18 +1,23 @@
 package com.heathcliff.pokedex.presentation.list.adapter
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.utils.ItemViewTypes
 
 class MainAdapter(
-        private val onItemClicked: (id: String) -> Unit
+    private val onItemClicked: (id: String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val displayableItems = listOf<DisplayableItem>().toMutableList()
@@ -52,7 +57,8 @@ class MainAdapter(
 
 // =============== PokemonViewHolder ===============
 
-class PokemonViewHolder(view: View, val onItemClicked: (id: String) -> Unit) : RecyclerView.ViewHolder(view) {
+class PokemonViewHolder(view: View, val onItemClicked: (id: String) -> Unit) :
+    RecyclerView.ViewHolder(view) {
 
     private val nameTextView: TextView = view.findViewById(R.id.pokemonItemNameText)
     private val pokemonImageView: ImageView = view.findViewById(R.id.pokemonItemImageView)
@@ -61,17 +67,31 @@ class PokemonViewHolder(view: View, val onItemClicked: (id: String) -> Unit) : R
         nameTextView.text = item.name
 
         Glide.with(pokemonImageView.context)
-                .load(item.imageUrl.toUri().buildUpon().scheme("https").build())
-                .into(pokemonImageView)
+            .asBitmap()
+            .load(item.imageUrl.toUri().buildUpon().scheme("https").build())
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    pokemonImageView.setImageBitmap(resource)
+                    itemView.background.setTint(
+                        Palette.from(resource).generate().getMutedColor(535353)
+                    )
+                }
 
-        itemView.setOnClickListener{
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            }
+            )
+
+        itemView.setOnClickListener {
             onItemClicked(item.id)
         }
     }
 
     companion object {
         fun from(parent: ViewGroup, onItemClicked: (id: String) -> Unit): RecyclerView.ViewHolder {
-            return PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item, parent, false), onItemClicked)
+            return PokemonViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item, parent, false),
+                onItemClicked
+            )
         }
     }
 }
@@ -87,7 +107,9 @@ class BannerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     companion object {
         fun from(parent: ViewGroup): RecyclerView.ViewHolder {
-            return BannerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.banner_item, parent, false))
+            return BannerViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.banner_item, parent, false)
+            )
         }
     }
 }

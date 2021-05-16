@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -13,8 +12,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonListBinding
-import com.heathcliff.pokedex.presentation.details.PokemonDetailsFragment
-import com.heathcliff.pokedex.presentation.details.PokemonDetailsViewState
 import com.heathcliff.pokedex.presentation.list.adapter.DisplayableItem
 import com.heathcliff.pokedex.presentation.list.adapter.MainAdapter
 import com.heathcliff.pokedex.utils.ItemViewTypes
@@ -22,6 +19,10 @@ import com.heathcliff.pokedex.utils.ItemViewTypes
 class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private val viewModel = PokemonListViewModel()
     private lateinit var adapter: MainAdapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.loadData()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,12 +31,13 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        val binding: FragmentPokemonListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
+        val binding: FragmentPokemonListBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
 
         initRecyclerView(binding)
 
         viewModel.viewState().observe(viewLifecycleOwner, Observer { state ->
-            when(state){
+            when (state) {
                 is PokemonListViewState.Loading -> {
                     binding.recyclerView.isVisible = false
                     binding.pokemonListProgressBar.isVisible = true
@@ -56,8 +58,6 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             }
         })
 
-        viewModel.loadData()
-
         return binding.root
     }
 
@@ -77,7 +77,11 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
 
         adapter = MainAdapter(
             onItemClicked = {
-                view?.findNavController()?.navigate(PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(it))
+                view?.findNavController()?.navigate(
+                    PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(
+                        it
+                    )
+                )
             })
 
         binding.recyclerView.layoutManager = manager
