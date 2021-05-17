@@ -21,7 +21,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
         <ImageView
             android:id="@+id/pokemonDetailsErrorImage"
@@ -32,23 +33,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/stat_sys_warning" />
+            app:srcCompat="@android:drawable/stat_sys_warning"
+            tools:visibility="gone" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/pokemonDetailsGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="pokemonDetailsImageView,pokemonDetailsName,
-            pokemonDetailsAbilities, pokemonDetailsAbilitiesHeader,
-            pokemonDetailsStatsHeader, pokemonDetailsStats"
+            app:constraint_referenced_ids="pokemonImage,pokemonName,
+            pokemonAbilities, AbilitiesHeader, circlePokemon, weightHeader, weightText, heightHeader, heightText, pokemonStats, pokemonTypesText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/circlePokemon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/circle_pokemon_details"
+            app:layout_constraintBottom_toBottomOf="@+id/pokemonImage"
+            app:layout_constraintEnd_toEndOf="@+id/pokemonImage"
+            app:layout_constraintStart_toStartOf="@+id/pokemonImage"
+            app:layout_constraintTop_toTopOf="@+id/pokemonImage" />
 
         <ImageView
-            android:id="@+id/pokemonDetailsImageView"
+            android:id="@+id/pokemonImage"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="32dp"
@@ -58,72 +68,195 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
+
         <TextView
-            android:id="@+id/pokemonDetailsName"
+            android:id="@+id/pokemonName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textAlignment="center"
             android:textAllCaps="true"
+            android:textColor="@color/app_light"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pokemonDetailsImageView"
+            app:layout_constraintTop_toBottomOf="@+id/pokemonImage"
             tools:text="Pokemon" />
 
         <TextView
-            android:id="@+id/pokemonDetailsAbilities"
+            android:id="@+id/weightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/app_light"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/heightText"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pokemonTypesText"
+            tools:text="3.2 kg" />
+
+        <TextView
+            android:id="@+id/weightHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed"
-            android:textAlignment="textStart"
+            android:text="@string/weight"
+            android:textAlignment="center"
             android:textAllCaps="true"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/pokemonDetailsAbilitiesHeader"
-            app:layout_constraintTop_toBottomOf="@+id/pokemonDetailsAbilitiesHeader"
-            tools:text="@string/pokemon" />
+            android:textColor="@color/app_light"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/weightText"
+            app:layout_constraintStart_toStartOf="@+id/weightText"
+            app:layout_constraintTop_toBottomOf="@+id/weightText" />
 
         <TextView
-            android:id="@+id/pokemonDetailsAbilitiesHeader"
+            android:id="@+id/heightHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/height"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/app_light"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/heightText"
+            app:layout_constraintStart_toStartOf="@+id/heightText"
+            app:layout_constraintTop_toBottomOf="@+id/heightText" />
+
+        <TextView
+            android:id="@+id/heightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/app_light"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/weightText"
+            app:layout_constraintTop_toTopOf="@+id/weightText"
+            tools:text="1.2 m" />
+
+        <TextView
+            android:id="@+id/pokemonTypesText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/app_light"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pokemonName"
+            tools:text="Grass" />
+
+        <TextView
+            android:id="@+id/pokemonAbilities"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:inputType="textMultiLine"
+            android:textAlignment="textStart"
+            android:textAllCaps="true"
+            android:textColor="@color/app_light"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@+id/pokemonStats"
+            app:layout_constraintStart_toStartOf="@+id/pokemonStats"
+            app:layout_constraintTop_toBottomOf="@+id/AbilitiesHeader"
+            tools:text="@string/pokemon" />
+
+
+        <TextView
+            android:id="@+id/AbilitiesHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/abilities"
             android:textAlignment="center"
             android:textAllCaps="true"
+            android:textColor="@color/app_light"
             android:textSize="25sp"
+            app:layout_constraintStart_toStartOf="@+id/pokemonStats"
+            app:layout_constraintTop_toBottomOf="@+id/pokemonStats" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pokemonStats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/pokemonDetailsStatsHeader"
-            app:layout_constraintTop_toTopOf="@+id/pokemonDetailsStatsHeader" />
-
-        <TextView
-            android:id="@+id/pokemonDetailsStatsHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="100dp"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:text="@string/stats"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toStartOf="@+id/pokemonDetailsAbilitiesHeader"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pokemonDetailsName" />
+            app:layout_constraintTop_toBottomOf="@+id/weightText">
 
-        <TextView
-            android:id="@+id/pokemonDetailsStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textAlignment="textStart"
-            android:textAllCaps="true"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/pokemonDetailsStatsHeader"
-            app:layout_constraintTop_toBottomOf="@+id/pokemonDetailsStatsHeader"
-            tools:text="@string/pokemon" />
+            <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
+                android:id="@+id/hpBar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/atkBar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rcAnimationEnable="true"
+                app:rcAnimationSpeedScale="3"
+                app:rcMax="150"
+                app:rcProgressColor="#FF3D00"
+                app:rcRadius="25dp"
+                app:rcTextProgressColor="@color/black"
+                app:rcTextProgressSize="14sp" />
+
+            <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
+                android:id="@+id/atkBar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/defBar"
+                app:layout_constraintTop_toBottomOf="@+id/hpBar"
+                app:rcAnimationEnable="true"
+                app:rcAnimationSpeedScale="3"
+                app:rcMax="150"
+                app:rcProgressColor="#FF9800"
+                app:rcRadius="25dp"
+                app:rcTextProgressColor="@color/black"
+                app:rcTextProgressSize="14sp" />
+
+            <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
+                android:id="@+id/defBar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/spdBar"
+                app:layout_constraintTop_toBottomOf="@+id/atkBar"
+                app:rcAnimationEnable="true"
+                app:rcAnimationSpeedScale="3"
+                app:rcMax="150"
+                app:rcProgressColor="#2979FF"
+                app:rcRadius="25dp"
+                app:rcTextProgressColor="@color/black"
+                app:rcTextProgressSize="14sp" />
+
+            <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
+                android:id="@+id/spdBar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/defBar"
+                app:rcAnimationEnable="true"
+                app:rcAnimationSpeedScale="3"
+                app:rcMax="150"
+                app:rcProgressColor="#8BC34A"
+                app:rcRadius="25dp"
+                app:rcTextProgressColor="@color/black"
+                app:rcTextProgressSize="14sp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

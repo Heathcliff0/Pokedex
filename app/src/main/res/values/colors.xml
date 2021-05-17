@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="app_dark">#535353</color>
+    <color name="app_light">#DCDCDC</color>
+    <color name="hp">#F44336</color>
+    <color name="atk">#FF9800</color>
+    <color name="def">#3F51B5</color>
+    <color name="spd">#4CAF50</color>
 </resources>

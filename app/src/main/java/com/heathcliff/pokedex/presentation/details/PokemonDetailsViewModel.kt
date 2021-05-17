@@ -28,10 +28,14 @@ class PokemonDetailsViewModel : ViewModel() {
                             name = pokemon.name,
                             imageUrl = pokemon.imageUrl,
                             abilities = pokemon.abilities,
-                            stats = pokemon.stats
+                            stats = pokemon.stats,
+                            types = pokemon.types,
+                            weight = pokemon.weight,
+                            height = pokemon.height
                     )
                 }, {
-                    _viewStateLiveData.value = PokemonDetailsViewState.Error("Failed to load pokemon with id=$id")
+                    _viewStateLiveData.value =
+                            PokemonDetailsViewState.Error("Failed to load pokemon with id=$id")
                 })
     }
 

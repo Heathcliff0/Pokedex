@@ -43,7 +43,10 @@ data class PokemonDetailedResponse(
         val id: String,
         val name: String,
         val abilities: List<PokemonAbilityData>,
-        val stats: List<PokemonStatsData>
+        val stats: List<PokemonStatsData>,
+        val types: List<PokemonTypeData>,
+        val weight: String,
+        val height: String
 )
 
 // Abilities
@@ -62,5 +65,14 @@ data class PokemonStatsData(
 )
 
 data class PokemonStatsDetailData(
+        val name: String
+)
+
+// Types
+data class PokemonTypeData(
+        val type: PokemonTypeDetailedData
+)
+
+data class PokemonTypeDetailedData(
         val name: String
 )

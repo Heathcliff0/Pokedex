@@ -24,6 +24,7 @@ class NetworkPokemonRepository(
     override fun getPokemonById(id: String): Single<PokemonEntity> {
         return api.fetchPokemonInfo(id).map { pokemonDetailedResponse ->
             val abilities = pokemonDetailedResponse.abilities.map { it.ability.name }
+            val types = pokemonDetailedResponse.types.map { it.type.name }
 
             val stats = mutableMapOf<String, String>()
             pokemonDetailedResponse.stats.map {
@@ -35,11 +36,15 @@ class NetworkPokemonRepository(
                     name = pokemonDetailedResponse.name,
                     imageUrl = generateUrlFromId(pokemonDetailedResponse.id),
                     abilities = abilities,
-                    stats = stats
+                    stats = stats,
+                    types = types,
+                    weight = pokemonDetailedResponse.weight,
+                    height = pokemonDetailedResponse.height
             )
         }
     }
 
-    private fun generateUrlFromId(id: String): String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
+    private fun generateUrlFromId(id: String): String =
+            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 
 }

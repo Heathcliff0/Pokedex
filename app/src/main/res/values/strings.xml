@@ -3,4 +3,6 @@
     <string name="pokemon">Pokemon</string>
     <string name="abilities">Abilities</string>
     <string name="stats">Stats</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
 </resources>

@@ -25,6 +25,7 @@
         android:fontFamily="sans-serif-condensed-medium"
         android:padding="8dp"
         android:textAllCaps="true"
+        android:textColor="@color/app_light"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -13,26 +13,27 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonListBinding
 import com.heathcliff.pokedex.presentation.list.adapter.DisplayableItem
-import com.heathcliff.pokedex.presentation.list.adapter.MainAdapter
+import com.heathcliff.pokedex.presentation.list.adapter.PokemonListAdapter
 import com.heathcliff.pokedex.utils.ItemViewTypes
 
 class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private val viewModel = PokemonListViewModel()
-    private lateinit var adapter: MainAdapter
+    private lateinit var adapter: PokemonListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.loadData()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
         val binding: FragmentPokemonListBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
+                DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
 
         initRecyclerView(binding)
 
@@ -75,14 +76,14 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             }
         }
 
-        adapter = MainAdapter(
-            onItemClicked = {
-                view?.findNavController()?.navigate(
-                    PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(
-                        it
+        adapter = PokemonListAdapter(
+                onItemClicked = {
+                    view?.findNavController()?.navigate(
+                            PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(
+                                    it
+                            )
                     )
-                )
-            })
+                })
 
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
