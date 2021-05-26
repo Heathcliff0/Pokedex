@@ -1,20 +1,16 @@
 package com.heathcliff.pokedex.presentation.list
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.heathcliff.pokedex.di.Injector
 import com.heathcliff.pokedex.presentation.list.adapter.toItem
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 class PokemonListViewModel : ViewModel() {
     //private val repository: PokemonRepository = MockPokemonRepository()
     private val repository = Injector.providePokemonRepository()
-
-    private var disposable: Disposable? = null
 
     private val _viewStateLiveData = MutableLiveData<PokemonListViewState>()
     fun viewState(): LiveData<PokemonListViewState> = _viewStateLiveData
@@ -22,24 +18,14 @@ class PokemonListViewModel : ViewModel() {
     fun loadData() {
         _viewStateLiveData.value = PokemonListViewState.Loading
 
-        disposable = repository.getPokemonList()
-                .map { items -> items.map { it.toItem() } }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            _viewStateLiveData.value = PokemonListViewState.Data(it)
-                        },
-                        {
-                            Log.d("ViewModel", "Error is", it)
-                            _viewStateLiveData.value = PokemonListViewState.Error
-                        }
-                )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable?.dispose()
+        viewModelScope.launch {
+            try {
+                _viewStateLiveData.value =
+                    PokemonListViewState.Data(repository.getPokemonList().map { it.toItem() })
+            } catch (t: Throwable) {
+                _viewStateLiveData.value = PokemonListViewState.Error
+            }
+        }
     }
 
     /*    fun showData(pokemons: List<PokemonEntity>) {

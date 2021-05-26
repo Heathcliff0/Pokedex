@@ -3,26 +3,19 @@ package com.heathcliff.pokedex.data
 import com.heathcliff.pokedex.data.network.PokemonApiService
 import com.heathcliff.pokedex.domain.PokemonEntity
 import com.heathcliff.pokedex.domain.PokemonRepository
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class NetworkPokemonRepository(
-        val api: PokemonApiService
+    val api: PokemonApiService
 ) : PokemonRepository {
 
-    override fun getPokemonList(): Single<List<PokemonEntity>> {
-        return api.fetchPokemonList()
-                .flatMap { pokemonListResponse ->
-                    Observable.fromIterable(pokemonListResponse.results)
-                            .flatMapSingle { pokemonPartialResponse ->
-                                getPokemonById(pokemonPartialResponse.name)
-                            }
-                            .toList()
-                }
+    override suspend fun getPokemonList(): List<PokemonEntity> = withContext(Dispatchers.IO){
+        return@withContext api.fetchPokemonList().results.map { getPokemonById(it.name) }
     }
 
-    override fun getPokemonById(id: String): Single<PokemonEntity> {
-        return api.fetchPokemonInfo(id).map { pokemonDetailedResponse ->
+    override suspend fun getPokemonById(id: String): PokemonEntity = withContext(Dispatchers.IO){
+        api.fetchPokemonInfo(id).let { pokemonDetailedResponse ->
             val abilities = pokemonDetailedResponse.abilities.map { it.ability.name }
             val types = pokemonDetailedResponse.types.map { it.type.name }
 
@@ -31,20 +24,20 @@ class NetworkPokemonRepository(
                 stats.put(it.stat.name, it.base_stat)
             }
 
-            PokemonEntity(
-                    id = pokemonDetailedResponse.id,
-                    name = pokemonDetailedResponse.name,
-                    imageUrl = generateUrlFromId(pokemonDetailedResponse.id),
-                    abilities = abilities,
-                    stats = stats,
-                    types = types,
-                    weight = pokemonDetailedResponse.weight,
-                    height = pokemonDetailedResponse.height
+            return@let PokemonEntity(
+                id = pokemonDetailedResponse.id,
+                name = pokemonDetailedResponse.name,
+                imageUrl = generateUrlFromId(pokemonDetailedResponse.id),
+                abilities = abilities,
+                stats = stats,
+                types = types,
+                weight = pokemonDetailedResponse.weight,
+                height = pokemonDetailedResponse.height
             )
         }
     }
 
     private fun generateUrlFromId(id: String): String =
-            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 
 }
