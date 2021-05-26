@@ -19,21 +19,22 @@ import com.bumptech.glide.request.transition.Transition
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonDetailsBinding
 import com.heathcliff.pokedex.utils.setStats
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
     private lateinit var binding: FragmentPokemonDetailsBinding
-    private val viewModel = PokemonDetailsViewModel()
+    private val viewModel: PokemonDetailsViewModel by viewModel()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
         val args = PokemonDetailsFragmentArgs.fromBundle(requireArguments())
         binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_details, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_details, container, false)
 
         loadPokemonData(args.pokemonId)
 
@@ -78,20 +79,20 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
         setStats(binding, state.stats)
 
         Glide.with(binding.pokemonImage.context)
-                .asBitmap()
-                .load(state.imageUrl.toUri().buildUpon().scheme("https").build())
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        val color = Palette.from(resource).generate().getMutedColor(535353)
-                        binding.pokemonImage.setImageBitmap(resource)
-                        binding.circlePokemon.background.setTint(color)
-                        binding.hpBar.progressBackgroundColor = color
-                        binding.atkBar.progressBackgroundColor = color
-                        binding.defBar.progressBackgroundColor = color
-                        binding.spdBar.progressBackgroundColor = color
-                    }
+            .asBitmap()
+            .load(state.imageUrl.toUri().buildUpon().scheme("https").build())
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    val color = Palette.from(resource).generate().getMutedColor(535353)
+                    binding.pokemonImage.setImageBitmap(resource)
+                    binding.circlePokemon.background.setTint(color)
+                    binding.hpBar.progressBackgroundColor = color
+                    binding.atkBar.progressBackgroundColor = color
+                    binding.defBar.progressBackgroundColor = color
+                    binding.spdBar.progressBackgroundColor = color
+                }
 
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                })
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
     }
 }

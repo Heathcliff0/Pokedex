@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.heathcliff.pokedex.di.Injector
+import com.heathcliff.pokedex.domain.PokemonRepository
 import kotlinx.coroutines.launch
 
-class PokemonDetailsViewModel : ViewModel() {
-    private val repository = Injector.providePokemonRepository()
+class PokemonDetailsViewModel(private val repository: PokemonRepository) : ViewModel() {
 
     private val _viewStateLiveData = MutableLiveData<PokemonDetailsViewState>()
     fun viewState(): LiveData<PokemonDetailsViewState> = _viewStateLiveData
@@ -28,8 +27,9 @@ class PokemonDetailsViewModel : ViewModel() {
                     weight = pokemon.weight,
                     height = pokemon.height
                 )
-            } catch (t: Throwable){
-                _viewStateLiveData.value = PokemonDetailsViewState.Error("Failed to load pokemon with id=$id")
+            } catch (t: Throwable) {
+                _viewStateLiveData.value =
+                    PokemonDetailsViewState.Error("Failed to load pokemon with id=$id")
             }
         }
     }
