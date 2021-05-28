@@ -7,14 +7,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NetworkPokemonRepository(
-    val api: PokemonApiService
+    private val api: PokemonApiService
 ) : PokemonRepository {
 
-    override suspend fun getPokemonList(): List<PokemonEntity> = withContext(Dispatchers.IO){
+    override suspend fun getPokemonList(): List<PokemonEntity> = withContext(Dispatchers.IO) {
         return@withContext api.fetchPokemonList().results.map { getPokemonById(it.name) }
     }
 
-    override suspend fun getPokemonById(id: String): PokemonEntity = withContext(Dispatchers.IO){
+    override suspend fun getPokemonById(id: String): PokemonEntity = withContext(Dispatchers.IO) {
         api.fetchPokemonInfo(id).let { pokemonDetailedResponse ->
             val abilities = pokemonDetailedResponse.abilities.map { it.ability.name }
             val types = pokemonDetailedResponse.types.map { it.type.name }

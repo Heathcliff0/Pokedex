@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
-    single<PokemonApiService> { createPokemonApiService() }
+    single { createPokemonApiService() }
     single<PokemonRepository> { NetworkPokemonRepository(get()) }
 
     viewModel { PokemonListViewModel(get()) }

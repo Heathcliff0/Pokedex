@@ -2,7 +2,6 @@ package com.heathcliff.pokedex.presentation.details
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +10,12 @@ import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonDetailsBinding
-import com.heathcliff.pokedex.utils.setStats
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
@@ -44,7 +41,7 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
     private fun loadPokemonData(id: String) {
         viewModel.loadPokemonById(id)
 
-        viewModel.viewState().observe(viewLifecycleOwner, Observer { state ->
+        viewModel.viewState().observe(viewLifecycleOwner, { state ->
             when (state) {
                 is PokemonDetailsViewState.Loading -> {
                     binding.pokemonDetailsGroup.isVisible = false
@@ -67,7 +64,7 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
         })
     }
 
-    fun showData(state: PokemonDetailsViewState.Data) {
+    private fun showData(state: PokemonDetailsViewState.Data) {
         binding.pokemonName.text = state.name
         binding.pokemonAbilities.text = state.abilities.joinToString(separator = ", ") { it }
 
@@ -85,14 +82,32 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     val color = Palette.from(resource).generate().getMutedColor(535353)
                     binding.pokemonImage.setImageBitmap(resource)
-                    binding.circlePokemon.background.setTint(color)
-                    binding.hpBar.progressBackgroundColor = color
-                    binding.atkBar.progressBackgroundColor = color
-                    binding.defBar.progressBackgroundColor = color
-                    binding.spdBar.progressBackgroundColor = color
+                    setColors(binding, color)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
             })
     }
+}
+
+fun setStats(binding: FragmentPokemonDetailsBinding, stats: Map<String, String>) {
+    binding.hpBar.progressText = "HP: ${stats.getValue("hp").toInt()}"
+    binding.hpBar.setProgress(stats.getValue("hp").toInt())
+
+    binding.atkBar.progressText = "ATK: ${stats.getValue("attack").toInt()}"
+    binding.atkBar.setProgress(stats.getValue("attack").toInt())
+
+    binding.defBar.progressText = "DEF: ${stats.getValue("defense").toInt()}"
+    binding.defBar.setProgress(stats.getValue("defense").toInt())
+
+    binding.spdBar.progressText = "SPD: ${stats.getValue("speed").toInt()}"
+    binding.spdBar.setProgress(stats.getValue("speed").toInt())
+}
+
+fun setColors(binding: FragmentPokemonDetailsBinding, color: Int) {
+    binding.circlePokemon.background.setTint(color)
+    binding.hpBar.progressBackgroundColor = color
+    binding.atkBar.progressBackgroundColor = color
+    binding.defBar.progressBackgroundColor = color
+    binding.spdBar.progressBackgroundColor = color
 }
