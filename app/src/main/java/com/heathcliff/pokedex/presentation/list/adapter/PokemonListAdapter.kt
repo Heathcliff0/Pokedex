@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -17,25 +18,15 @@ import com.heathcliff.pokedex.R
 
 class PokemonListAdapter(
     private val onItemClicked: (id: String) -> Unit
-) : RecyclerView.Adapter<PokemonViewHolder>() {
-
-    private val displayableItems = listOf<PokemonItem>().toMutableList()
+) : ListAdapter<PokemonItem, PokemonViewHolder>(PokemonItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         return PokemonViewHolder.from(parent, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
-        val item = displayableItems[position]
+        val item = getItem(position)
         holder.bind(item)
-    }
-
-    override fun getItemCount(): Int = displayableItems.size
-
-    fun setItemsList(items: List<PokemonItem>) {
-        displayableItems.clear()
-        displayableItems.addAll(items)
-        notifyDataSetChanged()
     }
 }
 

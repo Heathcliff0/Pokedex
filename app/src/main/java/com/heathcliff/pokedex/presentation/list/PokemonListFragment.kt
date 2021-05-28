@@ -80,7 +80,7 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     }
 
     private fun showData(items: List<PokemonItem>) {
-        adapter.setItemsList(items)
+        adapter.submitList(items)
     }
 
 }
