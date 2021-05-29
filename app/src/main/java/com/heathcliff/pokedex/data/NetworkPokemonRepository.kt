@@ -10,9 +10,10 @@ class NetworkPokemonRepository(
     private val api: PokemonApiService
 ) : PokemonRepository {
 
-    override suspend fun getPokemonList(): List<PokemonEntity> = withContext(Dispatchers.IO) {
-        return@withContext api.fetchPokemonList().results.map { getPokemonById(it.name) }
-    }
+    override suspend fun getPokemonList(offset: Int): List<PokemonEntity> =
+        withContext(Dispatchers.IO) {
+            return@withContext api.fetchPokemonList(offset = offset).results.map { getPokemonById(it.name) }
+        }
 
     override suspend fun getPokemonById(id: String): PokemonEntity = withContext(Dispatchers.IO) {
         api.fetchPokemonInfo(id).let { pokemonDetailedResponse ->

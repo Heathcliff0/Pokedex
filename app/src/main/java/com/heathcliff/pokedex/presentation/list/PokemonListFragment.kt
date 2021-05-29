@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.heathcliff.pokedex.R
 import com.heathcliff.pokedex.databinding.FragmentPokemonListBinding
 import com.heathcliff.pokedex.presentation.list.adapter.PokemonItem
@@ -18,10 +19,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private val viewModel: PokemonListViewModel by viewModel()
     private lateinit var adapter: PokemonListAdapter
+    private lateinit var binding: FragmentPokemonListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loadData()
+        viewModel.loadFirstPokemons()
     }
 
     override fun onCreateView(
@@ -31,7 +33,7 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        val binding: FragmentPokemonListBinding =
+        binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
 
         initRecyclerView(binding)
@@ -39,7 +41,6 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         viewModel.viewState().observe(viewLifecycleOwner, { state ->
             when (state) {
                 is PokemonListViewState.Loading -> {
-                    binding.recyclerView.isVisible = false
                     binding.pokemonListProgressBar.isVisible = true
                     binding.pokemonListErrorImage.isVisible = false
                 }
@@ -77,11 +78,24 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
 
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
+
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (viewModel.currentOffset() <= 100) {
+                    if ((recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition() == recyclerView.adapter!!.itemCount - 1) {
+                        binding.loadingNextPokemonsBar.visibility = View.VISIBLE
+                        viewModel.loadNextPokemons()
+                    }
+                }
+            }
+        })
     }
 
     private fun showData(items: List<PokemonItem>) {
         adapter.submitList(items)
+        binding.loadingNextPokemonsBar.visibility = View.GONE
     }
 
 }
-
