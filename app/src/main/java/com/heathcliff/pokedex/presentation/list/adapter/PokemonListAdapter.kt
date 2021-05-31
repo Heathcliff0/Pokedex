@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.heathcliff.pokedex.R
+import kotlin.coroutines.coroutineContext
 
 class PokemonListAdapter(
     private val onItemClicked: (id: String) -> Unit
@@ -48,7 +49,8 @@ class PokemonViewHolder(view: View, val onItemClicked: (id: String) -> Unit) :
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     pokemonImageView.setImageBitmap(resource)
                     itemView.background.setTint(
-                        Palette.from(resource).generate().getMutedColor(535353)
+                        Palette.from(resource).maximumColorCount(24).generate()
+                            .getMutedColor(535353)
                     )
                 }
 

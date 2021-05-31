@@ -83,7 +83,7 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (viewModel.currentOffset() <= 100) {
+                if (viewModel.currentOffset() < 80) {
                     if ((recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition() == recyclerView.adapter!!.itemCount - 1) {
                         binding.loadingNextPokemonsBar.visibility = View.VISIBLE
                         viewModel.loadNextPokemons()
