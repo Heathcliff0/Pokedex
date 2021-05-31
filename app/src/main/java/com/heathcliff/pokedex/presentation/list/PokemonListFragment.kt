@@ -1,9 +1,7 @@
 package com.heathcliff.pokedex.presentation.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -20,6 +18,7 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private val viewModel: PokemonListViewModel by viewModel()
     private lateinit var adapter: PokemonListAdapter
     private lateinit var binding: FragmentPokemonListBinding
+    private var isAvailableToLoad = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,8 +82,11 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (viewModel.currentOffset() < 80) {
-                    if ((recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition() == recyclerView.adapter!!.itemCount - 1) {
+                if (viewModel.currentOffset() < 80 && isAvailableToLoad) {
+                    if (((recyclerView.layoutManager as GridLayoutManager)
+                            .findLastCompletelyVisibleItemPosition() == recyclerView.adapter!!.itemCount - 1)
+                    ) {
+                        isAvailableToLoad = false
                         binding.loadingNextPokemonsBar.visibility = View.VISIBLE
                         viewModel.loadNextPokemons()
                     }
@@ -96,6 +98,6 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private fun showData(items: List<PokemonItem>) {
         adapter.submitList(items)
         binding.loadingNextPokemonsBar.visibility = View.GONE
+        isAvailableToLoad = true
     }
-
 }
