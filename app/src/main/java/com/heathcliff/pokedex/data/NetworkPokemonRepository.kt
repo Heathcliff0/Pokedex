@@ -38,6 +38,11 @@ class NetworkPokemonRepository(
         }
     }
 
+    override suspend fun checkPokemonExistenceById(id: String) {
+        api.fetchPokemonId(id)
+    }
+
+
     private fun generateUrlFromId(id: String): String =
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 

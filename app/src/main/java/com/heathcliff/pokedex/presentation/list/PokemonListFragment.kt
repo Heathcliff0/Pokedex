@@ -2,6 +2,8 @@ package com.heathcliff.pokedex.presentation.list
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,6 +16,7 @@ import com.heathcliff.pokedex.presentation.list.adapter.PokemonItem
 import com.heathcliff.pokedex.presentation.list.adapter.PokemonListAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private val viewModel: PokemonListViewModel by viewModel()
     private lateinit var adapter: PokemonListAdapter
@@ -22,6 +25,7 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel.loadFirstPokemons()
     }
 
@@ -36,6 +40,8 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             DataBindingUtil.inflate(inflater, R.layout.fragment_pokemon_list, container, false)
 
         initRecyclerView(binding)
+
+        // ========== Observers ==========
 
         viewModel.viewState().observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -58,7 +64,46 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             }
         })
 
+        viewModel.pokemonExistsLiveData.observe(viewLifecycleOwner, {
+            if (it.first) {
+                requireView().findNavController().navigate(
+                    PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(
+                        it.second.lowercase()
+                    )
+                )
+                viewModel.pokemonExistsLiveData.value = false to ""
+            }
+        })
+
+        viewModel.toastTriggerLiveData.observe(viewLifecycleOwner, {
+            if (it) {
+                Toast.makeText(activity, "Oops. Not found...", Toast.LENGTH_SHORT).show()
+                viewModel.toastTriggerLiveData.value = false
+            }
+        })
+
         return binding.root
+    }
+
+    // ========== Options Menu ==========
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_pokedex, menu)
+
+        val searchView = menu.findItem(R.id.searchOption).actionView as SearchView
+        searchView.queryHint = "Search Pokemon..."
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.checkPokemonExistence(query!!)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
     }
 
     // ========== Functions ==========

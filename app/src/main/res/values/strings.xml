@@ -5,4 +5,9 @@
     <string name="stats">Stats</string>
     <string name="weight">Weight</string>
     <string name="height">Height</string>
+    <string name="Search">Search</string>
+    <string name="Filter">Filter</string>
+    <string name="Favorite">Favorite</string>
+    <string name="by_generation">By generation</string>
+    <string name="by_type">By type</string>
 </resources>

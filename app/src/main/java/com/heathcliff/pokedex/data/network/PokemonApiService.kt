@@ -13,4 +13,7 @@ interface PokemonApiService {
 
     @GET("pokemon/{name}")
     suspend fun fetchPokemonInfo(@Path("name") name: String): PokemonDetailedResponse
+
+    @GET("pokemon/{name}")
+    suspend fun fetchPokemonId(@Path("name") name: String): PokemonPartialResponse
 }

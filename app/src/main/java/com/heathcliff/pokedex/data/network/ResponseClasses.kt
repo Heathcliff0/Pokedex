@@ -7,6 +7,7 @@ data class PokemonListResponse(
 )
 
 data class PokemonPartialResponse(
+    val id: String,
     val name: String,
     val url: String
 )

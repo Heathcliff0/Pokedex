@@ -11,6 +11,9 @@ import kotlinx.coroutines.launch
 
 class PokemonListViewModel(private val repository: PokemonRepository) : ViewModel() {
 
+    var pokemonExistsLiveData = MutableLiveData<Pair<Boolean, String>>()
+    var toastTriggerLiveData = MutableLiveData<Boolean>()
+
     private val _viewStateLiveData = MutableLiveData<PokemonListViewState>()
     fun viewState(): LiveData<PokemonListViewState> = _viewStateLiveData
 
@@ -40,6 +43,18 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
                 _viewStateLiveData.value = PokemonListViewState.Data(items)
             } catch (t: Throwable) {
                 _viewStateLiveData.value = PokemonListViewState.Error
+            }
+        }
+    }
+
+    fun checkPokemonExistence(id: String) {
+        viewModelScope.launch {
+            try {
+                repository.checkPokemonExistenceById(id.lowercase())
+                pokemonExistsLiveData.value = true to id
+            } catch (t: Throwable) {
+                pokemonExistsLiveData.value = false to ""
+                toastTriggerLiveData.value = true
             }
         }
     }
