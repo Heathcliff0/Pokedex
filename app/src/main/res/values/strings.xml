@@ -10,4 +10,34 @@
     <string name="Favorite">Favorite</string>
     <string name="by_generation">By generation</string>
     <string name="by_type">By type</string>
+    <string name="All">All</string>
+    <string name="Ok">Ok</string>
+    <string name="Cancel">Cancel</string>
+    <string name="generation_1">Generation 1</string>
+    <string name="generation_2">Generation 2</string>
+    <string name="generation_3">Generation 3</string>
+    <string name="generation_4">Generation 4</string>
+    <string name="generation_5">Generation 5</string>
+    <string name="generation_6">Generation 6</string>
+    <string name="generation_7">Generation 7</string>
+    <string name="generation_8">Generation 8</string>
+    <string name="normal_type">Normal</string>
+    <string name="fighting_type">Fighting</string>
+    <string name="flying_type">Flying</string>
+    <string name="poison_type">Poison</string>
+    <string name="ground_type">Ground</string>
+    <string name="rock_type">Rock</string>
+    <string name="bug_type">Bug</string>
+    <string name="ghost_type">Ghost</string>
+    <string name="steel_type">Steel</string>
+    <string name="fire_type">Fire</string>
+    <string name="water_type">Water</string>
+    <string name="grass_type">Grass</string>
+    <string name="electric_type">Electric</string>
+    <string name="psychic_type">Psychic</string>
+    <string name="ice_type">Ice</string>
+    <string name="dragon_type">Dragon</string>
+    <string name="dark_type">Dark</string>
+    <string name="fairy_type">Fairy</string>
+
 </resources>

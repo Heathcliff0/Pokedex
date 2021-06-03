@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.heathcliff.pokedex.domain.PokemonRepository
 import com.heathcliff.pokedex.presentation.list.adapter.PokemonItem
-import com.heathcliff.pokedex.presentation.list.adapter.toItem
 import kotlinx.coroutines.launch
 
 class PokemonListViewModel(private val repository: PokemonRepository) : ViewModel() {
@@ -14,19 +13,40 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
     var pokemonExistsLiveData = MutableLiveData<Pair<Boolean, String>>()
     var toastTriggerLiveData = MutableLiveData<Boolean>()
 
+    var filterState = FilterState.ALL
+    val loadTrigger = MutableLiveData(false)
+
     private val _viewStateLiveData = MutableLiveData<PokemonListViewState>()
     fun viewState(): LiveData<PokemonListViewState> = _viewStateLiveData
 
     private var items: List<PokemonItem> = emptyList()
+
     private var currentOffset = 0
     fun currentOffset() = currentOffset
 
+    var currentGen = 1
+    var currentType = 1
+
     fun loadFirstPokemons() {
         _viewStateLiveData.value = PokemonListViewState.Loading
+        currentOffset = 0
 
         viewModelScope.launch {
             try {
-                items += (repository.getPokemonList(0).map { it.toItem() })
+                when (filterState) {
+                    FilterState.ALL -> {
+                        items = emptyList()
+                        items += repository.getPokemonList(0)
+                    }
+                    FilterState.GENERATION -> {
+                        items = emptyList()
+                        items += repository.getPokemonGenerationList(currentGen)
+                    }
+                    FilterState.TYPE -> {
+                        items = emptyList()
+                        items += repository.getPokemonTypeList(currentType)
+                    }
+                }
                 _viewStateLiveData.value = PokemonListViewState.Data(items)
             } catch (t: Throwable) {
                 _viewStateLiveData.value = PokemonListViewState.Error
@@ -39,7 +59,11 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
 
         viewModelScope.launch {
             try {
-                items += (repository.getPokemonList(currentOffset).map { it.toItem() })
+                when (filterState) {
+                    FilterState.ALL -> {
+                        items += repository.getPokemonList(currentOffset)
+                    }
+                }
                 _viewStateLiveData.value = PokemonListViewState.Data(items)
             } catch (t: Throwable) {
                 _viewStateLiveData.value = PokemonListViewState.Error
@@ -58,4 +82,8 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
             }
         }
     }
+}
+
+enum class FilterState {
+    ALL, GENERATION, TYPE
 }

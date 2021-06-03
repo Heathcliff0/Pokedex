@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/searchOption"
         android:icon="@drawable/ic_search_24"
@@ -15,11 +15,99 @@
         app:showAsAction="ifRoom|collapseActionView">
         <menu>
             <item
+                android:id="@+id/AllFilter"
+                android:title="@string/All" />
+            <item
                 android:id="@+id/byGenerationFilter"
-                android:title="@string/by_generation" />
+                android:title="@string/by_generation">
+                <menu>
+                    <item
+                        android:id="@+id/gen1"
+                        android:title="@string/generation_1" />
+                    <item
+                        android:id="@+id/gen2"
+                        android:title="@string/generation_2" />
+                    <item
+                        android:id="@+id/gen3"
+                        android:title="@string/generation_3" />
+                    <item
+                        android:id="@+id/gen4"
+                        android:title="@string/generation_4" />
+                    <item
+                        android:id="@+id/gen5"
+                        android:title="@string/generation_5" />
+                    <item
+                        android:id="@+id/gen6"
+                        android:title="@string/generation_6" />
+                    <item
+                        android:id="@+id/gen7"
+                        android:title="@string/generation_7" />
+                    <item
+                        android:id="@+id/gen8"
+                        android:title="@string/generation_8" />
+
+                </menu>
+            </item>
             <item
                 android:id="@+id/byTypeFilter"
-                android:title="@string/by_type" />
+                android:title="@string/by_type">
+                <menu>
+                    <item
+                        android:id="@+id/normal"
+                        android:title="@string/normal_type" />
+                    <item
+                        android:id="@+id/fighting"
+                        android:title="@string/fighting_type" />
+                    <item
+                        android:id="@+id/flying"
+                        android:title="@string/flying_type" />
+                    <item
+                        android:id="@+id/poison"
+                        android:title="@string/poison_type" />
+                    <item
+                        android:id="@+id/ground"
+                        android:title="@string/ground_type" />
+                    <item
+                        android:id="@+id/rock"
+                        android:title="@string/rock_type" />
+                    <item
+                        android:id="@+id/bug"
+                        android:title="@string/bug_type" />
+                    <item
+                        android:id="@+id/ghost"
+                        android:title="@string/ghost_type" />
+                    <item
+                        android:id="@+id/steel"
+                        android:title="@string/steel_type" />
+                    <item
+                        android:id="@+id/fire"
+                        android:title="@string/fire_type" />
+                    <item
+                        android:id="@+id/water"
+                        android:title="@string/water_type" />
+                    <item
+                        android:id="@+id/grass"
+                        android:title="@string/grass_type" />
+                    <item
+                        android:id="@+id/electric"
+                        android:title="@string/electric_type" />
+                    <item
+                        android:id="@+id/psychic"
+                        android:title="@string/psychic_type" />
+                    <item
+                        android:id="@+id/ice"
+                        android:title="@string/ice_type" />
+                    <item
+                        android:id="@+id/dragon"
+                        android:title="@string/dragon_type" />
+                    <item
+                        android:id="@+id/dark"
+                        android:title="@string/dark_type" />
+                    <item
+                        android:id="@+id/fairy"
+                        android:title="@string/fairy_type" />
+                </menu>
+            </item>
         </menu>
     </item>
     <item

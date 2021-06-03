@@ -16,4 +16,10 @@ interface PokemonApiService {
 
     @GET("pokemon/{name}")
     suspend fun fetchPokemonId(@Path("name") name: String): PokemonPartialResponse
+
+    @GET("generation/{gen}")
+    suspend fun fetchPokemonGenerationList(@Path("gen") gen: Int): PokemonGenerationList
+
+    @GET("type/{type}")
+    suspend fun fetchPokemonTypeList(@Path("type") type: Int): PokemonTypeList
 }

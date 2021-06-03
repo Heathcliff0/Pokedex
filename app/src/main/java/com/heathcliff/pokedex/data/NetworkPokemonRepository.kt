@@ -3,6 +3,8 @@ package com.heathcliff.pokedex.data
 import com.heathcliff.pokedex.data.network.PokemonApiService
 import com.heathcliff.pokedex.domain.PokemonEntity
 import com.heathcliff.pokedex.domain.PokemonRepository
+import com.heathcliff.pokedex.presentation.list.adapter.PokemonItem
+import com.heathcliff.pokedex.utils.REGEX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -10,9 +12,28 @@ class NetworkPokemonRepository(
     private val api: PokemonApiService
 ) : PokemonRepository {
 
-    override suspend fun getPokemonList(offset: Int): List<PokemonEntity> =
+    override suspend fun getPokemonList(offset: Int): List<PokemonItem> =
         withContext(Dispatchers.IO) {
-            return@withContext api.fetchPokemonList(offset = offset).results.map { getPokemonById(it.name) }
+            return@withContext api.fetchPokemonList(offset = offset).results.map {
+                val id = REGEX.find(it.url)!!.value
+                PokemonItem(id, it.name, generateUrlFromId(id))
+            }
+        }
+
+    override suspend fun getPokemonGenerationList(generation: Int): List<PokemonItem> =
+        withContext(Dispatchers.IO) {
+            return@withContext api.fetchPokemonGenerationList(gen = generation).pokemon_species.map {
+                val id = REGEX.find(it.url)!!.value
+                PokemonItem(id, it.name, generateUrlFromId(id))
+            }
+        }
+
+    override suspend fun getPokemonTypeList(type: Int): List<PokemonItem> =
+        withContext(Dispatchers.IO) {
+            return@withContext api.fetchPokemonTypeList(type = type).pokemon.map {
+                val id = REGEX.find(it.pokemon.url)!!.value
+                PokemonItem(id, it.pokemon.name, generateUrlFromId(id))
+            }
         }
 
     override suspend fun getPokemonById(id: String): PokemonEntity = withContext(Dispatchers.IO) {

@@ -7,7 +7,6 @@ data class PokemonListResponse(
 )
 
 data class PokemonPartialResponse(
-    val id: String,
     val name: String,
     val url: String
 )
@@ -49,4 +48,18 @@ data class PokemonTypeData(
 
 data class PokemonTypeDetailedData(
     val name: String
+)
+
+// Generation Filter
+data class PokemonGenerationList(
+    val pokemon_species: List<PokemonPartialResponse>
+)
+
+// Types Filter
+data class PokemonTypeList(
+    val pokemon: List<TypeResponsePart>
+)
+
+data class TypeResponsePart(
+    val pokemon: PokemonPartialResponse
 )

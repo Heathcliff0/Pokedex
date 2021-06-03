@@ -1,9 +1,12 @@
 package com.heathcliff.pokedex.presentation.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.view.menu.MenuItemImpl
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -22,6 +25,9 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private lateinit var adapter: PokemonListAdapter
     private lateinit var binding: FragmentPokemonListBinding
     private var isAvailableToLoad = false
+
+    private var genFilterMenuItems: MutableList<Int> = mutableListOf()
+    private var typeFilterMenuItems: MutableList<Int> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +70,10 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             }
         })
 
+        viewModel.loadTrigger.observe(viewLifecycleOwner, {
+            viewModel.loadFirstPokemons()
+        })
+
         viewModel.pokemonExistsLiveData.observe(viewLifecycleOwner, {
             if (it.first) {
                 requireView().findNavController().navigate(
@@ -91,6 +101,9 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_pokedex, menu)
 
+        menu.findItem(R.id.byGenerationFilter).subMenu.forEach { genFilterMenuItems.add(it.itemId) }
+        menu.findItem(R.id.byTypeFilter).subMenu.forEach { typeFilterMenuItems.add(it.itemId) }
+
         val searchView = menu.findItem(R.id.searchOption).actionView as SearchView
         searchView.queryHint = "Search Pokemon..."
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -106,6 +119,25 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.AllFilter -> {
+                viewModel.filterState = FilterState.ALL
+                viewModel.loadTrigger.value = viewModel.loadTrigger.value?.not()
+                true
+            }
+            in genFilterMenuItems -> {
+                loadGen(genFilterMenuItems.indexOf(item.itemId) + 1)
+                return true
+            }
+            in typeFilterMenuItems -> {
+                loadType(typeFilterMenuItems.indexOf(item.itemId) + 1)
+                return true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
     // ========== Functions ==========
 
     private fun initRecyclerView(binding: FragmentPokemonListBinding) {
@@ -140,9 +172,22 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         })
     }
 
+    private fun loadGen(gen: Int) {
+        viewModel.currentGen = gen
+        viewModel.filterState = FilterState.GENERATION
+        viewModel.loadTrigger.value = viewModel.loadTrigger.value?.not()
+    }
+
+    private fun loadType(type: Int) {
+        viewModel.currentType = type
+        viewModel.filterState = FilterState.TYPE
+        viewModel.loadTrigger.value = viewModel.loadTrigger.value?.not()
+    }
+
     private fun showData(items: List<PokemonItem>) {
         adapter.submitList(items)
         binding.loadingNextPokemonsBar.visibility = View.GONE
         isAvailableToLoad = true
     }
+
 }
