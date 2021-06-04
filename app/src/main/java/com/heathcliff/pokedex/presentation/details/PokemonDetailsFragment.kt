@@ -44,19 +44,19 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
         viewModel.viewState().observe(viewLifecycleOwner, { state ->
             when (state) {
                 is PokemonDetailsViewState.Loading -> {
-                    binding.pokemonDetailsGroup.isVisible = false
+                    binding.pokemonDetailsScrollView.isVisible = false
                     binding.pokemonDetailsProgressBar.isVisible = true
                     binding.pokemonDetailsErrorImage.isVisible = false
                 }
                 is PokemonDetailsViewState.Data -> {
-                    binding.pokemonDetailsGroup.isVisible = true
+                    binding.pokemonDetailsScrollView.isVisible = true
                     binding.pokemonDetailsProgressBar.isVisible = false
                     binding.pokemonDetailsErrorImage.isVisible = false
 
                     showData(state)
                 }
                 is PokemonDetailsViewState.Error -> {
-                    binding.pokemonDetailsGroup.isVisible = false
+                    binding.pokemonDetailsScrollView.isVisible = false
                     binding.pokemonDetailsProgressBar.isVisible = false
                     binding.pokemonDetailsErrorImage.isVisible = true
                 }
@@ -80,7 +80,8 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
             .load(state.imageUrl.toUri().buildUpon().scheme("https").build())
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val color = Palette.from(resource).generate().getMutedColor(535353)
+                    val color = Palette.from(resource).maximumColorCount(24).generate()
+                        .getMutedColor(535353)
                     binding.pokemonImage.setImageBitmap(resource)
                     setColors(binding, color)
                 }

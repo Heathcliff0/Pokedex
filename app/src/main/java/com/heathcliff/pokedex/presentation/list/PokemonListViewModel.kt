@@ -1,5 +1,6 @@
 package com.heathcliff.pokedex.presentation.list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,6 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
     var toastTriggerLiveData = MutableLiveData<Boolean>()
 
     var filterState = FilterState.ALL
-    val loadTrigger = MutableLiveData(false)
 
     private val _viewStateLiveData = MutableLiveData<PokemonListViewState>()
     fun viewState(): LiveData<PokemonListViewState> = _viewStateLiveData

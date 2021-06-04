@@ -70,10 +70,6 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
             }
         })
 
-        viewModel.loadTrigger.observe(viewLifecycleOwner, {
-            viewModel.loadFirstPokemons()
-        })
-
         viewModel.pokemonExistsLiveData.observe(viewLifecycleOwner, {
             if (it.first) {
                 requireView().findNavController().navigate(
@@ -123,7 +119,7 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
         return when (item.itemId) {
             R.id.AllFilter -> {
                 viewModel.filterState = FilterState.ALL
-                viewModel.loadTrigger.value = viewModel.loadTrigger.value?.not()
+                viewModel.loadFirstPokemons()
                 true
             }
             in genFilterMenuItems -> {
@@ -175,13 +171,13 @@ class PokemonListFragment : Fragment(R.layout.fragment_pokemon_list) {
     private fun loadGen(gen: Int) {
         viewModel.currentGen = gen
         viewModel.filterState = FilterState.GENERATION
-        viewModel.loadTrigger.value = viewModel.loadTrigger.value?.not()
+        viewModel.loadFirstPokemons()
     }
 
     private fun loadType(type: Int) {
         viewModel.currentType = type
         viewModel.filterState = FilterState.TYPE
-        viewModel.loadTrigger.value = viewModel.loadTrigger.value?.not()
+        viewModel.loadFirstPokemons()
     }
 
     private fun showData(items: List<PokemonItem>) {
